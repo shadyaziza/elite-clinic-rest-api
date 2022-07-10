@@ -11,9 +11,11 @@ import (
 type App struct {
 }
 
-// Run - sets up our application
+// Run - is going to be responsible for
+// the instantiation and startup of our
+// go application
 func (app *App) Run() error {
-	fmt.Println("Setting up api")
+	fmt.Println("starting our api")
 	handler := transportHttp.NewHandler()
 	handler.SetupRoutes()
 
@@ -27,6 +29,6 @@ func main() {
 	fmt.Println("rest")
 	app := App{}
 	if err := app.Run(); err != nil {
-		fmt.Println("Error starting up api")
+		fmt.Println(err)
 	}
 }
