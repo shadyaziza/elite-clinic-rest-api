@@ -1,7 +1,9 @@
 package main
 
 import (
+	"context"
 	"fmt"
+	db2 "github.com/shadyaziza/elite-clinic-rest-api/internal/db"
 	transportHttp "github.com/shadyaziza/elite-clinic-rest-api/internal/transport/http"
 	"net/http"
 )
@@ -16,6 +18,16 @@ type App struct {
 // go application
 func (app *App) Run() error {
 	fmt.Println("starting our api")
+
+	db, err := db2.NewDatabase()
+	if err != nil {
+		fmt.Println("Failed to connect to the database")
+		return err
+	}
+	if err := db.Ping(context.Background()); err != nil {
+		return err
+	}
+	fmt.Println("Successfully connected and pinged database")
 	handler := transportHttp.NewHandler()
 	handler.SetupRoutes()
 
