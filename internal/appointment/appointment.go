@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/google/uuid"
-	db "github.com/shadyaziza/elite-clinic-rest-api/internal/db/sqlc"
+	"github.com/shadyaziza/elite-clinic-rest-api/internal"
 	"time"
 )
 
@@ -25,20 +25,16 @@ type Appointment struct {
 
 // Store - this interface defines all of the methods
 // that  our service needs to operate
-//type Store interface {
-//	Ping(ctx context.Context) error
-//	GetAppointment(ctx context.Context, id time.Time) (Appointment, error)
-//}
 
 // Service - is the struct on which all our
 // logic will be built on top of
 type Service struct {
-	Store db.Queries
+	Store internal.Store
 }
 
 // NewService - returns a pointer to a new
 // service
-func NewService(store db.Queries) *Service {
+func NewService(store internal.Store) *Service {
 	return &Service{
 		Store: store,
 	}

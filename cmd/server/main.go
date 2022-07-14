@@ -3,8 +3,8 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/shadyaziza/elite-clinic-rest-api/internal"
 	database "github.com/shadyaziza/elite-clinic-rest-api/internal/db"
-	"github.com/shadyaziza/elite-clinic-rest-api/server"
 )
 
 // App - the struct which contains things like pointers
@@ -33,7 +33,7 @@ func (app *App) Run() error {
 		return err
 	}
 
-	service, err := server.NewStore(db.Client).GetAppointment(context.Background(), "7e3577e8-0d70-4389-b937-e3abc7a3b0ee")
+	service, err := internal.NewStore(db.Client).GetAppointment(context.Background(), "7e3577e8-0d70-4389-b937-e3abc7a3b0ee")
 
 	if err != nil {
 		fmt.Println(fmt.Errorf("error setting up service %w", err))
