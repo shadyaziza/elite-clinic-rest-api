@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS appointments(
-    ID timestamptz,
+    ID timestamptz UNIQUE NOT NULL,
     comment Text,
-    patientID uuid,
-    doctorID uuid
+    patientID uuid NOT NULL,
+    doctorID uuid NOT NULL
 
 )

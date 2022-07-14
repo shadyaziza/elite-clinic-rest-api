@@ -28,6 +28,11 @@ func (app *App) Run() error {
 		return err
 	}
 	fmt.Println("Successfully connected and pinged database")
+
+	if err := db.MigrateDB(); err != nil {
+		fmt.Println("Failed to perform migration")
+		return err
+	}
 	handler := transportHttp.NewHandler()
 	handler.SetupRoutes()
 
