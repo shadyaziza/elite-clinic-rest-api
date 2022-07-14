@@ -24,7 +24,7 @@ func NewDatabase() (*Database, error) {
 	)
 	pool, err := sql.Open("postgres", connString)
 	if err != nil {
-		return &Database{}, fmt.Errorf("Could not connect to the database: %w", err)
+		return &Database{}, fmt.Errorf("could not connect to the database: %w", err)
 	}
 
 	pool.SetConnMaxLifetime(0)
