@@ -11,7 +11,7 @@ import (
 
 var (
 	ErrFetchingAppointment = errors.New("failed to fetch appointment by time id")
-	ErrNotImplemented      = errors.New("Not implemented")
+	ErrNotImplemented      = errors.New("not implemented")
 )
 
 // Appointment - a representation of the appointment
@@ -23,21 +23,21 @@ type Appointment struct {
 	doctorID  uuid.UUID
 }
 
-// Service - is the struct on which all our
+// AppointmentsService - is the struct on which all our
 // logic will be built on top of
-type Service struct {
+type AppointmentsService struct {
 	Store internal.Store
 }
 
 // NewService - returns a pointer to a new
 // service
-func NewService(store internal.Store) *Service {
-	return &Service{
+func NewService(store internal.Store) *AppointmentsService {
+	return &AppointmentsService{
 		Store: store,
 	}
 }
 
-func (s *Service) GetAppointment(ctx context.Context, id string) (Appointment, error) {
+func (s *AppointmentsService) GetAppointment(ctx context.Context, id string) (Appointment, error) {
 	fmt.Println("retrieving an appointment")
 	appointment, err := s.Store.GetAppointment(ctx, id)
 	if err != nil {
@@ -60,14 +60,14 @@ func (s *Service) GetAppointment(ctx context.Context, id string) (Appointment, e
 
 }
 
-func (s *Service) UpdateAppointment(ctx context.Context, updatedAppointment Appointment) error {
+func (s *AppointmentsService) UpdateAppointment(ctx context.Context, updatedAppointment Appointment) error {
 	return ErrNotImplemented
 }
 
-func (s *Service) DeleteAppointment(ctx context.Context, id time.Time) error {
+func (s *AppointmentsService) DeleteAppointment(ctx context.Context, id time.Time) error {
 	return ErrNotImplemented
 }
 
-func (s *Service) CreateAppointment(ctx context.Context, appointment Appointment) (Appointment, error) {
+func (s *AppointmentsService) CreateAppointment(ctx context.Context, appointment Appointment) (Appointment, error) {
 	return Appointment{}, ErrNotImplemented
 }
