@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/google/uuid"
 	"github.com/shadyaziza/elite-clinic-rest-api/internal"
+	db "github.com/shadyaziza/elite-clinic-rest-api/internal/db/sqlc"
 	"time"
 )
 
@@ -13,6 +14,15 @@ var (
 	ErrFetchingAppointment = errors.New("failed to fetch appointment by time id")
 	ErrNotImplemented      = errors.New("not implemented")
 )
+
+func creatAppointment(appointment db.Appointment) Appointment {
+	return Appointment{
+		id:        appointment.ID,
+		comment:   appointment.Comment.String,
+		patientID: appointment.PatientID,
+		doctorID:  appointment.DoctorID,
+	}
+}
 
 // Appointment - a representation of the appointment
 // structure for our service
@@ -51,12 +61,7 @@ func (s *Service) GetAppointment(ctx context.Context, id string) (Appointment, e
 		// calls
 		return Appointment{}, ErrFetchingAppointment
 	}
-	return Appointment{
-		id:        appointment.ID,
-		comment:   appointment.Comment.String,
-		patientID: appointment.PatientID,
-		doctorID:  appointment.DoctorID,
-	}, nil
+	return creatAppointment(appointment), nil
 
 }
 
