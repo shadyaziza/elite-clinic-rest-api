@@ -51,17 +51,23 @@ func (s *Service) GetAppointment(ctx context.Context, id string) (Appointment, e
 	fmt.Println("retrieving an appointment")
 	appointment, err := s.Store.GetAppointment(ctx, id)
 	if err != nil {
-		// use this err to know implementation errors
-		// from logs
-		fmt.Println(err)
-		// return our own custom errors from service
-		// layer to transport layer to guard
-		// our implementation details from being
-		// exposed to potentially failed client
-		// calls
-		return Appointment{}, ErrFetchingAppointment
+		return appoitnmentServiceError(Appointment{}, err, ErrFetchingAppointment)
 	}
 	return creatAppointment(appointment), nil
+
+}
+
+func appoitnmentServiceError[K any](data K, implError error, serviceError error) (K, error) {
+
+	// use this err to know implementation errors
+	// from logs
+	fmt.Println(implError)
+	// return our own custom errors from service
+	// layer to transport layer to guard
+	// our implementation details from being
+	// exposed to potentially failed client
+	// calls
+	return data, serviceError
 
 }
 
