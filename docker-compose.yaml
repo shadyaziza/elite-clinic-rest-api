@@ -4,6 +4,7 @@ services:
   db:
     image: postgres:14.4-alpine
     container_name: "elite-clinic-database"
+    user: postgres
     ports:
       - "5432:5432"
     environment:
@@ -31,6 +32,7 @@ services:
       DB_TABLE: "postgres"
       DB_PORT: "5432"
       SSL_MODE: "disable"
+      DB_SOURCE: "postgres://postgres:postgres@db:5432/postgres?sslmode=dsiable"
     ports:
       - "8080:8080"
     depends_on:
@@ -38,6 +40,8 @@ services:
         condition: service_healthy
     networks:
       - fullstack
+    entrypoint: ["/app/wait-for.sh","db:5432","--","/app/start.sh"]
+    command: ["/app/app"]
 volumes:
   database_postgres:
 networks:
