@@ -5,7 +5,8 @@ set -e
 
 echo "Running DB migrations..."
 
-/app/migrate -path /app/migrations -database "$DB_TABLE://$DB_USERNAME:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_DB?sslmode=$SSL_MODE" -verbose up
+# if we want to use the migrate command in CLI
+#/app/migrate -path /app/migrations -database "$DB_TABLE://$DB_USERNAME:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_DB?sslmode=$SSL_MODE" -verbose up
 
 echo "Starting the app..."
 
