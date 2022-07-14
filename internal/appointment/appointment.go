@@ -51,15 +51,15 @@ func (s *Service) GetAppointment(ctx context.Context, id string) (Appointment, e
 	fmt.Println("retrieving an appointment")
 	appointment, err := s.Store.GetAppointment(ctx, id)
 	if err != nil {
-		return appoitnmentServiceError(Appointment{}, err, ErrFetchingAppointment)
+		return serviceErrorHandler(Appointment{}, err, ErrFetchingAppointment)
 	}
 	return creatAppointment(appointment), nil
 
 }
 
-func appoitnmentServiceError[K any](data K, implError error, serviceError error) (K, error) {
+func serviceErrorHandler[K any](data K, implError error, serviceError error) (K, error) {
 
-	// use this err to know implementation errors
+	// use this error to know implementation errors
 	// from logs
 	fmt.Println(implError)
 	// return our own custom errors from service
