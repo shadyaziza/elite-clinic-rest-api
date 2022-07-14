@@ -14,6 +14,6 @@ import (
 type Appointment struct {
 	ID        time.Time      `json:"id"`
 	Comment   sql.NullString `json:"comment"`
-	Patientid uuid.UUID      `json:"patientid"`
-	Doctorid  uuid.UUID      `json:"doctorid"`
+	PatientID string         `json:"patient_id"`
+	DoctorID  uuid.UUID      `json:"doctor_id"`
 }

@@ -7,21 +7,20 @@ package db
 
 import (
 	"context"
-	"time"
 )
 
 const getAppointment = `-- name: GetAppointment :one
-SELECT id, comment, patientid, doctorid FROM appointments WHERE id = $1  LIMIT 1
+SELECT id, comment, patient_id, doctor_id FROM appointments WHERE patient_id = $1  LIMIT 1
 `
 
-func (q *Queries) GetAppointment(ctx context.Context, id time.Time) (*Appointment, error) {
-	row := q.db.QueryRowContext(ctx, getAppointment, id)
+func (q *Queries) GetAppointment(ctx context.Context, patientID string) (Appointment, error) {
+	row := q.db.QueryRowContext(ctx, getAppointment, patientID)
 	var i Appointment
 	err := row.Scan(
 		&i.ID,
 		&i.Comment,
-		&i.Patientid,
-		&i.Doctorid,
+		&i.PatientID,
+		&i.DoctorID,
 	)
-	return &i, err
+	return i, err
 }

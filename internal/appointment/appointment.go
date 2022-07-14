@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/google/uuid"
+	db "github.com/shadyaziza/elite-clinic-rest-api/internal/db/sqlc"
 	"time"
 )
 
@@ -18,32 +20,33 @@ type Appointment struct {
 	id        time.Time
 	comment   string
 	patientID string
-	doctorID  string
+	doctorID  uuid.UUID
 }
 
 // Store - this interface defines all of the methods
 // that  our service needs to operate
-type Store interface {
-	GetComment(ctx context.Context, id time.Time) (Appointment, error)
-}
+//type Store interface {
+//	Ping(ctx context.Context) error
+//	GetAppointment(ctx context.Context, id time.Time) (Appointment, error)
+//}
 
 // Service - is the struct on which all our
 // logic will be built on top of
 type Service struct {
-	Store Store
+	Store db.Queries
 }
 
 // NewService - returns a pointer to a new
 // service
-func NewService(store Store) *Service {
+func NewService(store db.Queries) *Service {
 	return &Service{
 		Store: store,
 	}
 }
 
-func (s *Service) GetComment(ctx context.Context, id time.Time) (Appointment, error) {
-	fmt.Println("retrieving a comment")
-	appointment, err := s.Store.GetComment(ctx, id)
+func (s *Service) GetAppointment(ctx context.Context, id string) (Appointment, error) {
+	fmt.Println("retrieving an appointment")
+	appointment, err := s.Store.GetAppointment(ctx, id)
 	if err != nil {
 		// use this err to know implementation errors
 		// from logs
@@ -55,7 +58,12 @@ func (s *Service) GetComment(ctx context.Context, id time.Time) (Appointment, er
 		// calls
 		return Appointment{}, ErrFetchingAppointment
 	}
-	return appointment, nil
+	return Appointment{
+		id:        appointment.ID,
+		comment:   appointment.Comment.String,
+		patientID: appointment.PatientID,
+		doctorID:  appointment.DoctorID,
+	}, nil
 
 }
 

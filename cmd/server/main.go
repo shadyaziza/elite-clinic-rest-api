@@ -3,9 +3,8 @@ package main
 import (
 	"context"
 	"fmt"
-	db2 "github.com/shadyaziza/elite-clinic-rest-api/internal/db"
-	transportHttp "github.com/shadyaziza/elite-clinic-rest-api/internal/transport/http"
-	"net/http"
+	database "github.com/shadyaziza/elite-clinic-rest-api/internal/db"
+	"github.com/shadyaziza/elite-clinic-rest-api/server"
 )
 
 // App - the struct which contains things like pointers
@@ -19,7 +18,7 @@ type App struct {
 func (app *App) Run() error {
 	fmt.Println("starting our api")
 
-	db, err := db2.NewDatabase()
+	db, err := database.NewDatabase()
 	if err != nil {
 		fmt.Println("Failed to connect to the database")
 		return err
@@ -33,13 +32,20 @@ func (app *App) Run() error {
 		fmt.Println("Failed to perform migration")
 		return err
 	}
-	handler := transportHttp.NewHandler()
-	handler.SetupRoutes()
 
-	if err := http.ListenAndServe(":8080", handler.Router); err != nil {
-		println("Failed to set up server")
-		return err
+	service, err := server.NewStore(db.Client).GetAppointment(context.Background(), "7e3577e8-0d70-4389-b937-e3abc7a3b0ee")
+
+	if err != nil {
+		fmt.Println(fmt.Errorf("error setting up service %w", err))
 	}
+	fmt.Println(service)
+	//handler := transportHttp.NewHandler()
+	//handler.SetupRoutes()
+	//
+	//if err := http.ListenAndServe(":8080", handler.Router); err != nil {
+	//	println("Failed to set up server")
+	//	return err
+	//}
 	return nil
 }
 func main() {

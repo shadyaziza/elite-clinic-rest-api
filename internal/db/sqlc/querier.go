@@ -6,11 +6,10 @@ package db
 
 import (
 	"context"
-	"time"
 )
 
 type Querier interface {
-	GetAppointment(ctx context.Context, id time.Time) (*Appointment, error)
+	GetAppointment(ctx context.Context, patientID string) (Appointment, error)
 }
 
 var _ Querier = (*Queries)(nil)
