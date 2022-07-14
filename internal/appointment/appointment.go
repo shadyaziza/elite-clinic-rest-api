@@ -23,9 +23,6 @@ type Appointment struct {
 	doctorID  uuid.UUID
 }
 
-// Store - this interface defines all of the methods
-// that  our service needs to operate
-
 // Service - is the struct on which all our
 // logic will be built on top of
 type Service struct {
