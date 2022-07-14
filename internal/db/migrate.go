@@ -8,12 +8,12 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func (d *Database) MigrateDB() error {
+func (db *Database) MigrateDB() error {
 
 	fmt.Println("Migrating the database ... ")
-	driver, err := postgres.WithInstance(d.Client, &postgres.Config{})
+	driver, err := postgres.WithInstance(db.Client, &postgres.Config{})
 	if err != nil {
-		fmt.Errorf("Could not create the postgres driver: %w", err)
+		return fmt.Errorf("could not create the postgres driver: %w", err)
 
 	}
 	m, err := migrate.NewWithDatabaseInstance("file:///migrations", "postgres", driver)
@@ -22,7 +22,7 @@ func (d *Database) MigrateDB() error {
 		return err
 	}
 	if err := m.Up(); err != nil {
-		return fmt.Errorf("Could not run up the migrations: %w", err)
+		return fmt.Errorf("could not run up the migrations: %w", err)
 	}
 	fmt.Println("Successfully migrated the database")
 	return nil
