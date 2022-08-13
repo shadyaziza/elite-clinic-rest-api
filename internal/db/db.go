@@ -2,14 +2,14 @@ package db
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
+	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"os"
 )
 
 type Database struct {
-	Client *sql.DB
+	Client *sqlx.DB
 }
 
 func NewDatabase() (*Database, error) {
@@ -22,19 +22,19 @@ func NewDatabase() (*Database, error) {
 		os.Getenv("DB_PASSWORD"),
 		os.Getenv("SSL_MODE"),
 	)
-	pool, err := sql.Open("postgres", connString)
+	dbConn, err := sqlx.Connect("postgres", connString)
 	if err != nil {
 		return &Database{}, fmt.Errorf("could not connect to the database: %w", err)
 	}
 
-	pool.SetConnMaxLifetime(0)
-	pool.SetMaxIdleConns(3)
-	pool.SetMaxOpenConns(3)
+	dbConn.SetConnMaxLifetime(0)
+	dbConn.SetMaxIdleConns(3)
+	dbConn.SetMaxOpenConns(3)
 	return &Database{
-		Client: pool,
+		Client: dbConn,
 	}, nil
 }
 
 func (db *Database) Ping(ctx context.Context) error {
-	return db.Client.PingContext(ctx)
+	return db.Client.DB.PingContext(ctx)
 }
