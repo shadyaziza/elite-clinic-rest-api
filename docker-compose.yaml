@@ -23,7 +23,7 @@ services:
 
   api:
     build: .
-    container_name: "elite-clinic-rest-api"
+    container_name: "elite-clinic"
     environment:
       DB_USERNAME: "postgres"
       DB_PASSWORD: "postgres"
@@ -40,10 +40,11 @@ services:
         condition: service_healthy
     networks:
       - fullstack
-    entrypoint: ["/app/wait-for.sh","db:5432","--","/app/start.sh"]
-    command: ["/app/app"]
+
+
 volumes:
   database_postgres:
+
 networks:
   fullstack:
     driver: bridge
