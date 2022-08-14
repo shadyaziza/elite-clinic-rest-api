@@ -34,9 +34,9 @@ func CreateAppointment(appointmentRow AppointmentRow) appointment.Appointment {
 
 const getOneQuery = `SELECT * FROM appointments WHERE id = $1`
 
-func (d *Database) GetAppointment(ctx context.Context, id int) (appointment.Appointment, error) {
+func (db *Database) GetAppointment(ctx context.Context, id int) (appointment.Appointment, error) {
 	var appointmentRow AppointmentRow
-	row := d.Client.QueryRowContext(ctx, getOneQuery, id)
+	row := db.Client.QueryRowContext(ctx, getOneQuery, id)
 	err := row.Scan(
 		&appointmentRow.ID,
 		&appointmentRow.AppointmentID,
