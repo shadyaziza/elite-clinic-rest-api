@@ -17,7 +17,7 @@ tasks:
     ignore_error: true
     cmds:
       - docker compose down
-      - docker rmi elite-clinic-rest-api_api
+      - docker rmi elite-clinic-rest-api_server
       - docker-compose up --build
 
   migrate-create:

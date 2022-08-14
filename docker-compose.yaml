@@ -21,9 +21,9 @@ services:
       timeout: 5s
       retries: 5
 
-  api:
+  server:
     build: .
-    container_name: "elite-clinic"
+    container_name: "elite-clinic-api"
     environment:
       DB_USERNAME: "postgres"
       DB_PASSWORD: "postgres"

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	database "github.com/shadyaziza/elite-clinic-rest-api/internal/db"
 )
@@ -22,17 +21,14 @@ func (app *App) Run() error {
 		fmt.Println("Failed to connect to the database")
 		return err
 	}
-	// sqlx.Connect() already pings so this is redundant
-	if err := db.Ping(context.Background()); err != nil {
-		return err
-	}
+
 	fmt.Println("Successfully connected and pinged database")
 
-	//if err := db.MigrateDB(); err != nil {
-	//	fmt.Println("Failed to perform migration")
-	//	return err
-	//}
-	//
+	if err := db.MigrateDB(); err != nil {
+		fmt.Println("Failed to perform migration")
+		return err
+	}
+
 	//service, err := appointment.NewService(internal.NewStore(db.Client)).GetAppointment(context.Background(), "7e3577e8-0d70-4389-b937-e3abc7a3b0ee")
 
 	//if err != nil {

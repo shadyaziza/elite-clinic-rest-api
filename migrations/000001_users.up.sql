@@ -9,7 +9,8 @@ CREATE TYPE gender AS ENUM ('male','female');
 
 -- Table declaration
 CREATE TABLE IF NOT EXISTS users (
-    id uuid UNIQUE NOT NULL,
+    id bigserial unique  NOT NULL PRIMARY KEY ,
+    user_id uuid UNIQUE NOT NULL,
     type user_type NOT NULL DEFAULT ('patient'),
     phone_number varchar(50) NOT NULL UNIQUE,
     name varchar(50) NOT NULL,
