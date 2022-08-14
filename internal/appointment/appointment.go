@@ -5,8 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/google/uuid"
-	"github.com/shadyaziza/elite-clinic-rest-api/internal"
-	db "github.com/shadyaziza/elite-clinic-rest-api/internal/db/sqlc"
 	"time"
 )
 
@@ -15,45 +13,61 @@ var (
 	ErrNotImplemented      = errors.New("not implemented")
 )
 
-func creatAppointment(appointment db.Appointment) Appointment {
-	return Appointment{
-		id:        appointment.ID,
-		comment:   appointment.Comment.String,
-		patientID: appointment.PatientID,
-		doctorID:  appointment.DoctorID,
+// Store - this interface defines all the methods
+// that our service need in order to operate
+type Store interface {
+	GetAppointment(context.Context, int) (Appointment, error)
+}
+type AppointmentStore interface {
+	GetAppointment(context.Context, string) (Appointment, error)
+}
+
+// Service - is the struct on which all our
+// logic will be built on top of
+type Service struct {
+	Store Store
+}
+
+// NewService - returns a pointer to a new
+// service
+func NewService(store Store) *Service {
+	return &Service{
+		Store: store,
 	}
 }
 
 // Appointment - a representation of the appointment
 // structure for our service
 type Appointment struct {
-	id        time.Time
-	comment   string
-	patientID string
-	doctorID  uuid.UUID
+	ID            int64
+	AppointmentID uuid.UUID
+	Date          time.Time
+	Comment       string
+	PatientID     int64
+	DoctorID      int64
 }
 
-// Service - is the struct on which all our
-// logic will be built on top of
-type Service struct {
-	Store internal.Store
-}
+//// Service - is the struct on which all our
+//// logic will be built on top of
+//type Service struct {
+//	Store internal.Store
+//}
 
 // NewService - returns a pointer to a new
 // service
-func NewService(store internal.Store) *Service {
-	return &Service{
-		Store: store,
-	}
-}
+//func NewService(store internal.Store) *Service {
+//	return &Service{
+//		Store: store,
+//	}
+//}
 
-func (s *Service) GetAppointment(ctx context.Context, id string) (Appointment, error) {
+func (s *Service) GetAppointment(ctx context.Context, id int) (Appointment, error) {
 	fmt.Println("retrieving an appointment")
-	appointment, err := s.Store.GetAppointment(ctx, id)
+	_, err := s.Store.GetAppointment(ctx, id)
 	if err != nil {
 		return serviceErrorHandler(Appointment{}, err, ErrFetchingAppointment)
 	}
-	return creatAppointment(appointment), nil
+	return Appointment{}, nil
 
 }
 

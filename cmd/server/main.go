@@ -1,7 +1,9 @@
 package main
 
 import (
+	"context"
 	"fmt"
+	"github.com/shadyaziza/elite-clinic-rest-api/internal/appointment"
 	database "github.com/shadyaziza/elite-clinic-rest-api/internal/db"
 )
 
@@ -29,7 +31,9 @@ func (app *App) Run() error {
 		return err
 	}
 
-	//service, err := appointment.NewService(internal.NewStore(db.Client)).GetAppointment(context.Background(), "7e3577e8-0d70-4389-b937-e3abc7a3b0ee")
+	appointmentService := appointment.NewService(db)
+
+	fmt.Println(appointmentService.GetAppointment(context.Background(), 2))
 
 	//if err != nil {
 	//	fmt.Println(fmt.Errorf("error setting up service %w", err))
