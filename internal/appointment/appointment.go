@@ -11,6 +11,8 @@ import (
 var (
 	ErrFetchingAppointment = errors.New("failed to fetch appointment by time id")
 	ErrCreatingAppointment = errors.New("failed to create appointment")
+	ErrUpdatingAppointment = errors.New("failed to update appointment")
+	ErrDeletingAppointment = errors.New("failed to delete appointment")
 	ErrNotImplemented      = errors.New("not implemented")
 )
 
@@ -19,6 +21,8 @@ var (
 type Store interface {
 	GetAppointment(context.Context, int) (Appointment, error)
 	CreateAppointment(context.Context, CreateNewAppointmentRequest) (Appointment, error)
+	UpdateAppointment(context.Context, UpdateNewAppointmentRequest) (Appointment, error)
+	DeleteAppointment(context.Context, int) error
 }
 
 //type AppointmentStore interface {
@@ -81,7 +85,7 @@ type CreateNewAppointmentRequest struct {
 }
 
 func (s *Service) CreateAppointment(ctx context.Context, req CreateNewAppointmentRequest) (Appointment, error) {
-	fmt.Println("retrieving an appointment")
+	fmt.Println("creating an appointment")
 	appointment, err := s.Store.CreateAppointment(ctx, req)
 	if err != nil {
 		return serviceErrorHandler(Appointment{}, err, ErrCreatingAppointment)
@@ -103,10 +107,27 @@ func serviceErrorHandler[K any](data K, implError error, serviceError error) (K,
 
 }
 
-func (s *Service) UpdateAppointment(ctx context.Context, updatedAppointment Appointment) error {
-	return ErrNotImplemented
+type UpdateNewAppointmentRequest struct {
+	ID      int64
+	Date    time.Time
+	Comment string
 }
 
-func (s *Service) DeleteAppointment(ctx context.Context, id time.Time) error {
-	return ErrNotImplemented
+func (s *Service) UpdateAppointment(ctx context.Context, req UpdateNewAppointmentRequest) (Appointment, error) {
+	fmt.Println("updating an appointment")
+	appointment, err := s.Store.UpdateAppointment(ctx, req)
+	if err != nil {
+		return serviceErrorHandler(Appointment{}, err, ErrUpdatingAppointment)
+	}
+	return appointment, nil
+}
+
+func (s *Service) DeleteAppointment(ctx context.Context, id int) error {
+	fmt.Println("deleting an appointment")
+	err := s.Store.DeleteAppointment(ctx, id)
+	if err != nil {
+
+		return ErrDeletingAppointment
+	}
+	return nil
 }

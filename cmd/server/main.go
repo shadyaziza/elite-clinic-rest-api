@@ -33,13 +33,19 @@ func (app *App) Run() error {
 	}
 
 	appointmentService := appointment.NewService(db)
+	fmt.Println(appointmentService.DeleteAppointment(context.Background(), 6))
+	fmt.Println(appointmentService.UpdateAppointment(context.Background(), appointment.UpdateNewAppointmentRequest{
+		ID:      4,
+		Comment: "updated comment",
+		Date:    time.Now(),
+	}))
 
 	fmt.Println(appointmentService.CreateAppointment(context.Background(), appointment.CreateNewAppointmentRequest{
 		Comment: "Added new appointment",
 		Date:    time.Now(),
 	}))
 
-	fmt.Println(appointmentService.GetAppointment(context.Background(), 1))
+	fmt.Println(appointmentService.GetAppointment(context.Background(), 5))
 
 	//if err != nil {
 	//	fmt.Println(fmt.Errorf("error setting up service %w", err))

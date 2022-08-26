@@ -63,12 +63,6 @@ func (db *Database) CreateAppointment(ctx context.Context,
 	}
 	rows := db.Client.QueryRowContext(ctx, insertOneQuery, insertionRow.Date, insertionRow.Comment)
 
-	//if err != nil {
-	//	return appointment.Appointment{}, fmt.Errorf("failed to insert appointment: %w", err)
-	//}
-	//if err := rows.Close(); err != nil {
-	//	return appointment.Appointment{}, fmt.Errorf("failed to close rows: %w", err)
-	//}
 	err := rows.Scan(
 		&appointmentRow.ID,
 		&appointmentRow.AppointmentID,
@@ -77,6 +71,40 @@ func (db *Database) CreateAppointment(ctx context.Context,
 
 	if err != nil {
 		return appointment.Appointment{}, fmt.Errorf("error inserting new appointment %w", err)
+	}
+
+	return convertAppointmentRowToAppointment(appointmentRow), nil
+}
+
+const deleteOneQuery = `DELETE FROM appointments WHERE id = $1`
+
+func (db *Database) DeleteAppointment(ctx context.Context, id int) error {
+	_, err := db.Client.ExecContext(ctx, deleteOneQuery, id)
+	if err != nil {
+		return fmt.Errorf("error deleting an appointment %w", err)
+	}
+	return err
+}
+
+const updateQuery = `UPDATE appointments SET date = $1 , comment = $2 WHERE id=$3 RETURNING *`
+
+func (db *Database) UpdateAppointment(ctx context.Context, req appointment.UpdateNewAppointmentRequest) (appointment.Appointment, error) {
+	var appointmentRow AppointmentRow
+	insertionRow := AppointmentRow{
+		ID:      req.ID,
+		Date:    req.Date,
+		Comment: sql.NullString{String: req.Comment, Valid: true},
+	}
+	rows := db.Client.QueryRowContext(ctx, updateQuery, insertionRow.Date, insertionRow.Comment, insertionRow.ID)
+
+	err := rows.Scan(
+		&appointmentRow.ID,
+		&appointmentRow.AppointmentID,
+		&appointmentRow.Date,
+		&appointmentRow.Comment)
+
+	if err != nil {
+		return appointment.Appointment{}, fmt.Errorf("error updating appointment %d %w", req.ID, err)
 	}
 
 	return convertAppointmentRowToAppointment(appointmentRow), nil
