@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/shadyaziza/elite-clinic-rest-api/internal/appointment"
 	database "github.com/shadyaziza/elite-clinic-rest-api/internal/db"
+	"time"
 )
 
 // App - the struct which contains things like pointers
@@ -33,7 +34,12 @@ func (app *App) Run() error {
 
 	appointmentService := appointment.NewService(db)
 
-	fmt.Println(appointmentService.GetAppointment(context.Background(), 2))
+	fmt.Println(appointmentService.CreateAppointment(context.Background(), appointment.CreateNewAppointmentRequest{
+		Comment: "Added new appointment",
+		Date:    time.Now(),
+	}))
+
+	fmt.Println(appointmentService.GetAppointment(context.Background(), 1))
 
 	//if err != nil {
 	//	fmt.Println(fmt.Errorf("error setting up service %w", err))
