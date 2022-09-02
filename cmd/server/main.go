@@ -1,11 +1,10 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"github.com/shadyaziza/elite-clinic-rest-api/internal/appointment"
 	database "github.com/shadyaziza/elite-clinic-rest-api/internal/db"
-	"time"
+	transportHttp "github.com/shadyaziza/elite-clinic-rest-api/internal/transport/http"
 )
 
 // App - the struct which contains things like pointers
@@ -33,31 +32,13 @@ func (app *App) Run() error {
 	}
 
 	appointmentService := appointment.NewService(db)
-	fmt.Println(appointmentService.DeleteAppointment(context.Background(), 6))
-	fmt.Println(appointmentService.UpdateAppointment(context.Background(), appointment.UpdateNewAppointmentRequest{
-		ID:      4,
-		Comment: "updated comment",
-		Date:    time.Now(),
-	}))
 
-	fmt.Println(appointmentService.CreateAppointment(context.Background(), appointment.CreateNewAppointmentRequest{
-		Comment: "Added new appointment",
-		Date:    time.Now(),
-	}))
+	httpHandler := transportHttp.NewHandler(appointmentService)
 
-	fmt.Println(appointmentService.GetAppointment(context.Background(), 5))
+	if err := httpHandler.Serve(); err != nil {
+		return err
+	}
 
-	//if err != nil {
-	//	fmt.Println(fmt.Errorf("error setting up service %w", err))
-	//}
-	//fmt.Println(service)
-	//handler := transportHttp.NewHandler()
-	//handler.SetupRoutes()
-	//
-	//if err := http.ListenAndServe(":8080", handler.Router); err != nil {
-	//	println("Failed to set up server")
-	//	return err
-	//}
 	return nil
 }
 func main() {
