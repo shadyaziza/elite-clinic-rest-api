@@ -1,9 +1,14 @@
 package http
 
 import (
+	"context"
 	"fmt"
 	"github.com/gorilla/mux"
+	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"time"
 )
 
 // Handler - stores pointer to our service
@@ -38,8 +43,22 @@ func (h *Handler) mapRoutes() {
 }
 
 func (h *Handler) Serve() error {
-	if err := h.Server.ListenAndServe(); err != nil {
-		return err
-	}
+	// non blocking op within a go routine
+	go func() {
+		if err := h.Server.ListenAndServe(); err != nil {
+			log.Println(err.Error())
+		}
+	}()
+	// create the channel
+	c := make(chan os.Signal, 1)
+	// if receving os.Interrupt block the rest of the func
+	signal.Notify(c, os.Interrupt)
+	<-c
+	// for 15 sec while shutdown the server gracefully
+	ctx, cancel := context.WithTimeout(context.Background(), 15+time.Second)
+	defer cancel()
+	h.Server.Shutdown(ctx)
+
+	log.Println("shutdown gracefully")
 	return nil
 }
