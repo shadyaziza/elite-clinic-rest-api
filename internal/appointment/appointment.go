@@ -20,14 +20,14 @@ var (
 // that our service need in order to operate
 type Store interface {
 	GetAppointment(context.Context, int) (Appointment, error)
-	CreateAppointment(context.Context, CreateNewAppointmentRequest) (Appointment, error)
+	PostAppointment(context.Context, CreateNewAppointmentRequest) (Appointment, error)
 	UpdateAppointment(context.Context, UpdateNewAppointmentRequest) (Appointment, error)
 	DeleteAppointment(context.Context, int) error
 }
 
 //type AppointmentStore interface {
 //	GetAppointment(context.Context, string) (Appointment, error)
-//	CreateAppointment(context.Context, CreateNewAppointmentRequest) (Appointment, error)
+//	PostAppointment(context.Context, CreateNewAppointmentRequest) (Appointment, error)
 //}
 
 // Service - is the struct on which all our
@@ -84,9 +84,9 @@ type CreateNewAppointmentRequest struct {
 	Comment string
 }
 
-func (s *Service) CreateAppointment(ctx context.Context, req CreateNewAppointmentRequest) (Appointment, error) {
+func (s *Service) PostAppointment(ctx context.Context, req CreateNewAppointmentRequest) (Appointment, error) {
 	fmt.Println("creating an appointment")
-	appointment, err := s.Store.CreateAppointment(ctx, req)
+	appointment, err := s.Store.PostAppointment(ctx, req)
 	if err != nil {
 		return serviceErrorHandler(Appointment{}, err, ErrCreatingAppointment)
 	}

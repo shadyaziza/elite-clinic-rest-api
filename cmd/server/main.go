@@ -38,7 +38,7 @@ func (app *App) Run() error {
 	if err := httpHandler.Serve(); err != nil {
 		return err
 	}
-
+	fmt.Println("Server started...")
 	return nil
 }
 func main() {

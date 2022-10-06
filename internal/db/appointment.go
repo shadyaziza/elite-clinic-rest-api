@@ -54,7 +54,7 @@ func (db *Database) GetAppointment(ctx context.Context, id int) (appointment.App
 
 const insertOneQuery = `INSERT INTO appointments (date,comment) VALUES ($1,$2) RETURNING *`
 
-func (db *Database) CreateAppointment(ctx context.Context,
+func (db *Database) PostAppointment(ctx context.Context,
 	req appointment.CreateNewAppointmentRequest) (appointment.Appointment, error) {
 	var appointmentRow AppointmentRow
 	insertionRow := AppointmentRow{

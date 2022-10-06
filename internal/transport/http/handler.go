@@ -18,8 +18,6 @@ type Handler struct {
 	Server             *http.Server
 }
 
-type AppointmentService interface{}
-
 // NewHandler - returns a pointer to a Handler
 func NewHandler(appService AppointmentService) *Handler {
 	h := &Handler{
@@ -39,6 +37,11 @@ func (h *Handler) mapRoutes() {
 	h.Router.HandleFunc("/hello", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Hellow Shady")
 	})
+
+	h.Router.HandleFunc("/api/v1/appointment", h.PostAppointment).Methods("POST")
+	h.Router.HandleFunc("/api/v1/appointment/{id}", h.GetAppointment).Methods("GET")
+	h.Router.HandleFunc("/api/v1/appointment/{id}", h.UpdateAppointment).Methods("PUT")
+	h.Router.HandleFunc("/api/v1/appointment/{id}", h.DeleteAppointment).Methods("DELETE")
 
 }
 
